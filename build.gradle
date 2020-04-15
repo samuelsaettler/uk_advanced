@@ -71,7 +71,7 @@ bootJar {
 
 sonarqube {
   properties {
-    property "sonar.projectKey", "sinafuchs_uek223_travis"
+    property "sonar.projectKey", "samuelsaettler_uk_advanced"
   }
 }
 
