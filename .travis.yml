@@ -4,7 +4,7 @@ jdk:
 before_install:
   - chmod +x gradlew
 
-addons
+addons:
   sonarcloud:
     organization: $SONAR_USER
     token: $SONAR_TOKEN
