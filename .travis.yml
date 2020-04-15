@@ -6,7 +6,7 @@ before_install:
 
 addons
   sonarcloud:
-    organization:  $SONAR_USER
+    organization: $SONAR_USER
     token: $SONAR_TOKEN
 
 script:
