@@ -26,3 +26,4 @@ jobs:
         app: $HEROKU_STAGING_APP
       after_success:
       # run newman skripts
+

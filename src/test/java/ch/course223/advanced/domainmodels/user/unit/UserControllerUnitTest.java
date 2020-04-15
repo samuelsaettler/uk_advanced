@@ -68,7 +68,7 @@ public class UserControllerUnitTest {
     private static List<UserDTO> listOfUserDTOSToBeTestedAgainst;
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp(){
         UUID uuidToBeTestedAgainst = UUID.randomUUID();
         Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
@@ -115,10 +115,10 @@ public class UserControllerUnitTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getId(), userToBeTestedAgainst.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getFirstName(), userToBeTestedAgainst.getFirstName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getLastName(), userToBeTestedAgainst.getLastName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getEmail(), userToBeTestedAgainst.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getId(),userToBeTestedAgainst.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getFirstName(),userToBeTestedAgainst.getFirstName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getLastName(),userToBeTestedAgainst.getLastName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getEmail(),userToBeTestedAgainst.getEmail())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(userToBeTestedAgainst.getRoles().stream().map(Role::getName).toArray(), userToBeTestedAgainst.getRoles().stream().map(Role::getName).toArray()))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray(), userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()))));
 
@@ -166,8 +166,7 @@ public class UserControllerUnitTest {
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTOToBeTestedAgainst);
 
         given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1)))
-                throw new BadRequestException();
+            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
             return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
         });
 
@@ -212,6 +211,7 @@ public class UserControllerUnitTest {
 
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).deleteById(stringArgumentCaptor.capture());
-        Assert.assertEquals(uuid.toString(), stringArgumentCaptor.getValue());
+        Assert.assertEquals(uuid.toString(),stringArgumentCaptor.getValue());
     }
+
 }
