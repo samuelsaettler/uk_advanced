@@ -28,9 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
@@ -53,8 +50,7 @@ public class UserIntegrationTest {
     private MockMvc mvc;
 
     @Before
-    public void setUp() {
-    }
+    public void setUp(){}
 
     @Test
     public void findById_requestUserById_returnsUser() throws Exception {
@@ -77,33 +73,8 @@ public class UserIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTOToBeTestedAgainst.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTOToBeTestedAgainst.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTOToBeTestedAgainst.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray())));
-    }
-
-    //findAllUsers
-    @Test
-    public void findAllUsers_requestAllUsers_returnAllUsers() throws Exception {
-
-        UUID uuid = UUID.randomUUID();
-        User userToBeTestedAgainst = new User().setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuid.randomUUID().toString()));
-        User userToBeTestedAgainst1 = new User().setFirstName("Jill").setLastName("Doe").setEmail("jill.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuid.randomUUID().toString()));
-        userRepository.save(userToBeTestedAgainst);
-        userRepository.save(userToBeTestedAgainst1);
-
-        UserDTO userDTOToBeTestedAgainst = new UserDTO(userToBeTestedAgainst.getId()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch");
-        UserDTO userDTOToBeTestedAgainst1 = new UserDTO(userToBeTestedAgainst1.getId()).setFirstName("Jill").setLastName("Doe").setEmail("jill.doe@noseryoung.ch");
-        List<UserDTO> listOfUserDTOSToBeTestedAgainst = Arrays.asList(userDTOToBeTestedAgainst, userDTOToBeTestedAgainst1);
-
-        mvc.perform(
-                MockMvcRequestBuilders.get("/users")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", isA(ArrayList.class)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(containsInAnyOrder(listOfUserDTOSToBeTestedAgainst.stream().map(UserDTO::getFirstName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(containsInAnyOrder(listOfUserDTOSToBeTestedAgainst.stream().map(UserDTO::getLastName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(containsInAnyOrder(listOfUserDTOSToBeTestedAgainst.stream().map(UserDTO::getEmail).toArray())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray())));
     }
 }
 
